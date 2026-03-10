@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Threadcraft AI — Multi-Agent AI Services Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #14A090;
+    --orange: #F08C30;
+    --red: #D04028;
+    --brown: #7D5E42;
+    --mint: #C2E2D2;
+    --mint-light: #E8F5EE;
+    --dark: #1A1A20;
+    --dark2: #222228;
+    --dark3: #2A2A32;
+    --text: #1A1A20;
+    --text-light: #4A4A55;
+    --muted: #6E7078;
+    --white: #FFFFFF;
+    --border: rgba(26,26,32,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--mint-light);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* --- NAV --- */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 18px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(232,245,238,0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700; font-size: 1.2rem; color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo img { height: 36px; border-radius: 8px; }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--teal) !important; color: var(--white) !important;
+    padding: 10px 24px; border-radius: 8px; font-weight: 600 !important;
+    transition: transform 0.2s, box-shadow 0.3s !important;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(20,160,144,0.3); }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    padding: 140px 40px 80px;
+    position: relative;
+    background: linear-gradient(180deg, var(--mint) 0%, var(--mint-light) 60%, var(--white) 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 900px;
+    background: radial-gradient(circle, rgba(20,160,144,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 18px; border-radius: 100px;
+    background: rgba(20,160,144,0.08);
+    border: 1px solid rgba(20,160,144,0.15);
+    font-size: 0.8rem; color: var(--teal); font-weight: 600;
+    margin-bottom: 32px; letter-spacing: 0.05em; text-transform: uppercase;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge span { display: inline-block; width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: pulse 2s infinite; }
+
+  h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 700; line-height: 1.08;
+    max-width: 800px; margin-bottom: 24px; color: var(--text);
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1 .accent { color: var(--teal); }
+  h1 .accent-red { color: var(--red); }
+
+  .hero-sub {
+    font-size: 1.2rem; color: var(--text-light);
+    max-width: 560px; line-height: 1.7; margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-buttons {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn-primary {
+    padding: 16px 36px; background: var(--teal); color: var(--white);
+    border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(20,160,144,0.3); }
+  .btn-secondary {
+    padding: 16px 36px; background: transparent; color: var(--text);
+    border: 1px solid rgba(26,26,32,0.15); border-radius: 10px;
+    font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif; text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: rgba(26,26,32,0.3); background: rgba(255,255,255,0.5); }
+
+  /* --- STATS BAR --- */
+  .stats {
+    display: flex; justify-content: center; gap: 60px; padding: 60px 40px;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-size: 2.4rem; font-weight: 700; color: var(--text);
+    font-family: 'Space Mono', monospace;
+  }
+  .stat-num .hl-orange { color: var(--orange); }
+  .stat-num .hl-red { color: var(--red); }
+  .stat-num .hl-teal { color: var(--teal); }
+  .stat-num .hl-brown { color: var(--brown); }
+  .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+  /* --- SECTIONS --- */
+  section { padding: 120px 40px; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .bg-white { background: var(--white); }
+  .bg-mint { background: var(--mint-light); }
+
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700; margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700;
+    line-height: 1.15; margin-bottom: 20px; max-width: 650px; color: var(--text);
+  }
+  .section-desc {
+    font-size: 1.05rem; color: var(--text-light); max-width: 560px;
+    line-height: 1.7; margin-bottom: 60px;
+  }
+
+  /* --- SERVICES --- */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .service-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px;
+    transition: all 0.4s; position: relative; overflow: hidden;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .service-card:nth-child(1)::before { background: var(--teal); }
+  .service-card:nth-child(2)::before { background: var(--orange); }
+  .service-card:nth-child(3)::before { background: var(--red); }
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 20px;
+  }
+  .service-card:nth-child(1) .service-icon { background: rgba(20,160,144,0.1); }
+  .service-card:nth-child(2) .service-icon { background: rgba(240,140,48,0.1); }
+  .service-card:nth-child(3) .service-icon { background: rgba(208,64,40,0.1); }
+  .service-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+  .service-card p { font-size: 0.95rem; color: var(--text-light); line-height: 1.6; }
+
+  /* --- COMPARISON --- */
+  .comparison {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+  }
+  .comp-header {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+    background: var(--mint-light);
+  }
+  .comp-header div { padding: 20px 28px; font-weight: 700; font-size: 0.9rem; }
+  .comp-header div:nth-child(3) { color: var(--teal); }
+  .comp-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-row div { padding: 16px 28px; font-size: 0.9rem; }
+  .comp-row div:first-child { color: var(--muted); font-weight: 500; }
+  .comp-row div:nth-child(2) { color: var(--muted); }
+  .comp-row div:nth-child(3) { color: var(--text); font-weight: 600; }
+
+  /* --- HOW IT WORKS --- */
+  .steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+  }
+  .step {
+    padding: 32px;
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .step-num {
+    font-family: 'Space Mono', monospace; font-size: 3rem;
+    font-weight: 700; color: rgba(20,160,144,0.12);
+    margin-bottom: 16px; line-height: 1;
+  }
+  .step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+  .step p { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+
+  /* --- PRICING --- */
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+  .pricing-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px; transition: all 0.3s;
+  }
+  .pricing-card.featured {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 1px var(--teal), 0 8px 40px rgba(20,160,144,0.08);
+  }
+  .pricing-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 8px; color: var(--muted); }
+  .pricing-price { font-size: 2rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .pricing-period { font-size: 0.8rem; color: var(--muted); margin-bottom: 24px; }
+  .pricing-features { list-style: none; padding: 0; }
+  .pricing-features li {
+    padding: 8px 0; font-size: 0.9rem; color: var(--text-light);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pricing-features li::before { content: '\2192'; color: var(--teal); font-weight: 700; }
+
+  /* --- CTA --- */
+  .cta-section {
+    text-align: center; padding: 120px 40px;
+    background: var(--mint);
+    position: relative;
+  }
+  .cta-section h2 {
+    font-size: clamp(2rem, 4vw, 3rem); font-weight: 700;
+    margin-bottom: 16px; color: var(--text);
+  }
+  .cta-section p { color: var(--text-light); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+
+  /* --- FOOTER --- */
+  footer {
+    padding: 40px; background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  footer p { color: var(--muted); font-size: 0.8rem; }
+  footer a { color: var(--muted); text-decoration: none; font-size: 0.8rem; }
+  footer a:hover { color: var(--text); }
+
+  /* --- ANIMATIONS --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* --- MOBILE --- */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    section { padding: 80px 20px; }
+    .hero { padding: 120px 20px 60px; }
+    .stats { gap: 32px; }
+    .comp-header, .comp-row { grid-template-columns: 1fr 1fr; }
+    .comp-header div:nth-child(2), .comp-row div:nth-child(2) { display: none; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="logo.jpeg" alt="Threadcraft AI">
+    Threadcraft <span style="color: var(--red);">AI</span>
+  </a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span></span> Multi-Agent AI Studio</div>
+  <h1>Your work, <span class="accent">woven</span> by <span class="accent-red">AI</span> agents</h1>
+  <p class="hero-sub">Threadcraft AI deploys coordinated fleets of AI agents to produce content, automate workflows, and build systems — in hours, not weeks.</p>
+  <div class="hero-buttons">
+    <a href="#contact" class="btn-primary">Start a Project</a>
+    <a href="#services" class="btn-secondary">See What We Build</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num">10<span class="hl-teal">x</span></div>
+    <div class="stat-label">Faster than traditional agencies</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">60–80<span class="hl-orange">%</span></div>
+    <div class="stat-label">Lower cost per deliverable</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">24<span class="hl-red">/7</span></div>
+    <div class="stat-label">Agent availability</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">9<span class="hl-brown">+</span></div>
+    <div class="stat-label">Specialized agents on your team</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="bg-white">
+  <div class="section-inner">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">Three ways we work for you</h2>
+    <p class="section-desc">Each service is powered by the same multi-agent backbone — research, production, QC, and delivery all running in parallel.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🎬</div>
+        <h3>Content Production</h3>
+        <p>Video packages, social media batches, blog posts, newsletters, and SEO content — researched, written, and delivered by coordinated agents at scale.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⚡</div>
+        <h3>Process Automation</h3>
+        <p>Email sequences, data pipelines, document processing, CRM workflows, and lead management — built and running without ongoing human input.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🧠</div>
+        <h3>AI Consulting</h3>
+        <p>Readiness assessments, custom agent design, tool integration, and hands-on training to bring AI into your existing operations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="compare" class="bg-mint">
+  <div class="section-inner">
+    <div class="section-label">Why Us</div>
+    <h2 class="section-title">Traditional agency vs. Threadcraft</h2>
+    <p class="section-desc">Same quality output, fundamentally different economics.</p>
+    <div class="comparison">
+      <div class="comp-header">
+        <div></div>
+        <div>Traditional Agency</div>
+        <div>Threadcraft AI</div>
+      </div>
+      <div class="comp-row"><div>Turnaround</div><div>24–48 hours</div><div>2–4 hours</div></div>
+      <div class="comp-row"><div>Cost per deliverable</div><div>$500–$2,000</div><div>$50–$150</div></div>
+      <div class="comp-row"><div>Scaling model</div><div>Hire more people</div><div>Add more agents</div></div>
+      <div class="comp-row"><div>Availability</div><div>Business hours</div><div>24/7</div></div>
+      <div class="comp-row"><div>Overhead</div><div>Office, payroll, benefits</div><div>API costs + hosting</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="bg-white">
+  <div class="section-inner">
+    <div class="section-label">Process</div>
+    <h2 class="section-title">How the thread runs</h2>
+    <p class="section-desc">From brief to delivery in four steps. Every step runs in parallel.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><h3>Brief</h3><p>You tell us what you need. We scope the work and assign the right agent team.</p></div>
+      <div class="step"><div class="step-num">02</div><h3>Research</h3><p>Scout agents gather data, verify sources, and build the knowledge base for your project.</p></div>
+      <div class="step"><div class="step-num">03</div><h3>Produce</h3><p>Specialized agents create, edit, and assemble deliverables simultaneously.</p></div>
+      <div class="step"><div class="step-num">04</div><h3>Deliver</h3><p>QC agents review everything before handoff. You get polished, ready-to-use output.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="bg-mint">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, honest pricing</h2>
+    <p class="section-desc">No retainers, no surprises. Pick the tier that fits your needs.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Starter</h3>
+        <div class="pricing-price">$500–$1,500</div>
+        <div class="pricing-period">per month</div>
+        <ul class="pricing-features">
+          <li>5–10 content pieces/month</li><li>1 automation workflow</li><li>Email support</li><li>48-hour turnaround</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured">
+        <h3>Growth</h3>
+        <div class="pricing-price">$1,500–$3,000</div>
+        <div class="pricing-period">per month</div>
+        <ul class="pricing-features">
+          <li>Full content + automation</li><li>Dedicated agent team</li><li>Priority support</li><li>24-hour turnaround</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <h3>Custom Project</h3>
+        <div class="pricing-price">$2K–$5K</div>
+        <div class="pricing-period">per project</div>
+        <ul class="pricing-features">
+          <li>Branded content series</li><li>Custom agent builds</li><li>Integration consulting</li><li>Scope-based timeline</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <h3>Consulting</h3>
+        <div class="pricing-price">$150–$250</div>
+        <div class="pricing-period">per hour</div>
+        <ul class="pricing-features">
+          <li>AI readiness assessments</li><li>Workflow design</li><li>Tool integration</li><li>Team training</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2>Ready to weave AI into your business?</h2>
+  <p>Tell us what you're working on. We'll scope it, assign the agents, and get to work — usually within 24 hours.</p>
+  <a href="mailto:joey@threadcraft.dev" class="btn-primary">joey@threadcraft.dev</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2026 Threadcraft AI. Milwaukee, WI.</p>
+  <div style="display: flex; gap: 24px;">
+    <a href="#">LinkedIn</a>
+    <a href="#">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
