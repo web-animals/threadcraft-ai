@@ -11,8 +11,13 @@
     --bg-elevated: #111111;
     --text: #f5f5f5;
     --text-muted: #888888;
-    --accent: #14A090;
-    --accent-orange: #F08C30;
+    /* Logo colors */
+    --teal: #14A090;
+    --orange: #F08C30;
+    --red: #D04028;
+    --brown: #7D5E42;
+    --mint: #C2E2D2;
+    --accent: var(--teal);
     --border: #222222;
   }
 
@@ -26,13 +31,31 @@
     line-height: 1.6;
   }
 
+  /* Logo SVG */
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--mint) 0%, #E8F5EE 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .logo-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+
   /* Header */
   header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    padding: 24px 48px;
+    padding: 20px 48px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,16 +64,22 @@
   }
 
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-text {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     color: var(--text);
-    text-decoration: none;
     letter-spacing: -0.02em;
   }
 
-  .logo span {
-    color: var(--accent);
+  .logo-text span {
+    color: var(--orange);
   }
 
   .nav-contact {
@@ -66,33 +95,78 @@
 
   /* Hero */
   .hero {
-    min-height: 60vh;
+    min-height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 120px 48px 80px;
+    padding: 140px 48px 80px;
     border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
   }
 
-  .hero-label {
-    font-size: 0.75rem;
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(20, 160, 144, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 30% 70%, rgba(240, 140, 48, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 70% 30%, rgba(208, 64, 40, 0.05) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .hero-badge span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(20, 160, 144, 0.1);
+    border: 1px solid rgba(20, 160, 144, 0.2);
+    border-radius: 100px;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: var(--text-muted);
-    margin-bottom: 24px;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    font-weight: 600;
+  }
+
+  .hero-badge span::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
   }
 
   .hero h1 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
     font-weight: 500;
     line-height: 1.05;
-    max-width: 900px;
+    max-width: 950px;
     letter-spacing: -0.03em;
   }
 
+  .hero h1 .weave {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--orange) 50%, var(--red) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .hero-desc {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: var(--text-muted);
     max-width: 600px;
     margin-top: 32px;
@@ -121,11 +195,16 @@
     padding-left: 56px;
   }
 
+  .project-item:hover .project-num {
+    color: var(--teal);
+  }
+
   .project-num {
     font-family: 'Space Grotesk', monospace;
     font-size: 0.85rem;
     color: var(--text-muted);
     font-weight: 400;
+    transition: color 0.3s;
   }
 
   .project-content h3 {
@@ -149,24 +228,24 @@
   }
 
   .tag {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--text-muted);
     padding: 4px 12px;
     border: 1px solid var(--border);
     border-radius: 100px;
+    transition: all 0.3s;
   }
 
-  .tag.accent {
-    color: var(--accent);
-    border-color: var(--accent);
-  }
+  .tag.teal { color: var(--teal); border-color: var(--teal); }
+  .tag.orange { color: var(--orange); border-color: var(--orange); }
+  .tag.red { color: var(--red); border-color: var(--red); }
+  .tag.brown { color: var(--brown); border-color: var(--brown); }
 
-  .tag.accent-orange {
-    color: var(--accent-orange);
-    border-color: var(--accent-orange);
-  }
+  .project-item:hover .tag.teal { background: rgba(20, 160, 144, 0.1); }
+  .project-item:hover .tag.orange { background: rgba(240, 140, 48, 0.1); }
+  .project-item:hover .tag.red { background: rgba(208, 64, 40, 0.1); }
 
   /* Services Section */
   .services-section {
@@ -179,7 +258,7 @@
   }
 
   .section-label {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--text-muted);
@@ -196,19 +275,44 @@
 
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 48px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
   }
 
   .service {
-    padding: 32px 0;
-    border-top: 1px solid var(--border);
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s;
   }
+
+  .service:hover {
+    border-color: var(--teal);
+    transform: translateY(-4px);
+  }
+
+  .service:nth-child(2):hover { border-color: var(--orange); }
+  .service:nth-child(3):hover { border-color: var(--red); }
+  .service:nth-child(4):hover { border-color: var(--brown); }
+
+  .service-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--teal);
+    opacity: 0.3;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+
+  .service:nth-child(2) .service-num { color: var(--orange); }
+  .service:nth-child(3) .service-num { color: var(--red); }
+  .service:nth-child(4) .service-num { color: var(--brown); }
 
   .service h4 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 600;
     margin-bottom: 12px;
   }
 
@@ -233,23 +337,23 @@
   .pricing-card {
     padding: 32px;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 12px;
     transition: all 0.3s;
   }
 
   .pricing-card:hover {
-    border-color: var(--accent);
+    border-color: var(--teal);
   }
 
   .pricing-card.featured {
-    border-color: var(--accent);
-    background: var(--bg-elevated);
+    border-color: var(--orange);
+    background: linear-gradient(135deg, rgba(240, 140, 48, 0.05) 0%, transparent 100%);
   }
 
   .pricing-card h4 {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     color: var(--text-muted);
     margin-bottom: 16px;
     text-transform: uppercase;
@@ -272,7 +376,22 @@
   .pricing-features li {
     padding: 8px 0;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
+
+  .pricing-features li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+
+  .pricing-features li:nth-child(2)::before { background: var(--orange); }
+  .pricing-features li:nth-child(3)::before { background: var(--red); }
+  .pricing-features li:nth-child(4)::before { background: var(--brown); }
 
   .pricing-features li:last-child {
     border-bottom: none;
@@ -283,6 +402,21 @@
     padding: 160px 48px;
     text-align: center;
     border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(20, 160, 144, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 60% 40%, rgba(240, 140, 48, 0.08) 0%, transparent 40%);
+    pointer-events: none;
   }
 
   .cta-section h2 {
@@ -291,23 +425,25 @@
     font-weight: 500;
     margin-bottom: 32px;
     letter-spacing: -0.03em;
+    position: relative;
   }
 
   .cta-btn {
     display: inline-block;
-    padding: 16px 40px;
-    background: var(--accent);
+    padding: 18px 48px;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--orange) 100%);
     color: var(--text);
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 600;
     border-radius: 100px;
     transition: all 0.3s;
+    position: relative;
   }
 
   .cta-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 40px rgba(20, 160, 144, 0.3);
+    box-shadow: 0 10px 40px rgba(20, 160, 144, 0.3), 0 10px 40px rgba(240, 140, 48, 0.2);
   }
 
   /* Footer */
@@ -328,12 +464,18 @@
   }
 
   footer a:hover {
-    color: var(--text);
+    color: var(--orange);
+  }
+
+  /* Animations */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
   /* Mobile */
   @media (max-width: 1024px) {
-    .services-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
     .pricing-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
@@ -352,6 +494,7 @@
       display: none;
     }
     
+    .services-grid { grid-template-columns: 1fr; }
     .pricing-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -359,13 +502,24 @@
 <body>
 
 <header>
-  <a href="#" class="logo">Threadcraft<span>.</span>ai</a>
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Woven threads pattern matching the logo -->
+        <path d="M20 30 Q35 20, 50 35 T80 30" stroke="#14A090" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M25 50 Q40 40, 55 55 T85 50" stroke="#F08C30" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M20 70 Q35 60, 50 75 T80 70" stroke="#D04028" stroke-width="8" stroke-linecap="round" fill="none"/>
+        <path d="M15 50 Q30 35, 45 50 T75 45" stroke="#7D5E42" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.8"/>
+      </svg>
+    </div>
+    <span class="logo-text">Threadcraft<span>AI</span></span>
+  </a>
   <a href="mailto:joey@threadcraft.dev" class="nav-contact">joey@threadcraft.dev</a>
 </header>
 
 <section class="hero">
-  <div class="hero-label">Multi-Agent AI Studio</div>
-  <h1>Your work, woven by coordinated AI agents</h1>
+  <div class="hero-badge"><span>Multi-Agent AI Studio</span></div>
+  <h1>Your work, <span class="weave">woven</span> by coordinated AI agents</h1>
   <p class="hero-desc">We deploy fleets of specialized AI agents to produce content, automate workflows, and build systems — delivering in hours what takes agencies weeks.</p>
 </section>
 
@@ -377,8 +531,8 @@
       <p>Video packages, social batches, blogs, newsletters, SEO content</p>
     </div>
     <div class="project-tags">
-      <span class="tag">Content</span>
-      <span class="tag accent">AI-Powered</span>
+      <span class="tag teal">Content</span>
+      <span class="tag orange">AI-Powered</span>
     </div>
   </a>
 
@@ -389,8 +543,8 @@
       <p>Email sequences, data pipelines, CRM workflows, lead management</p>
     </div>
     <div class="project-tags">
-      <span class="tag">Automation</span>
-      <span class="tag accent-orange">24/7</span>
+      <span class="tag orange">Automation</span>
+      <span class="tag teal">24/7</span>
     </div>
   </a>
 
@@ -401,8 +555,8 @@
       <p>Readiness assessments, custom agent design, team training</p>
     </div>
     <div class="project-tags">
-      <span class="tag">Strategy</span>
-      <span class="tag">Integration</span>
+      <span class="tag red">Strategy</span>
+      <span class="tag brown">Integration</span>
     </div>
   </a>
 
@@ -413,8 +567,8 @@
       <p>Bespoke agent teams built for your specific business needs</p>
     </div>
     <div class="project-tags">
-      <span class="tag">Custom</span>
-      <span class="tag accent">Bespoke</span>
+      <span class="tag teal">Custom</span>
+      <span class="tag orange">Bespoke</span>
     </div>
   </a>
 
@@ -425,8 +579,8 @@
       <p>Hands-on workshops to bring AI into your operations</p>
     </div>
     <div class="project-tags">
-      <span class="tag">Education</span>
-      <span class="tag">Workshops</span>
+      <span class="tag brown">Education</span>
+      <span class="tag red">Workshops</span>
     </div>
   </a>
 
@@ -437,8 +591,8 @@
       <p>Connect your existing stack to AI capabilities</p>
     </div>
     <div class="project-tags">
-      <span class="tag">API</span>
-      <span class="tag">Integration</span>
+      <span class="tag teal">API</span>
+      <span class="tag orange">Integration</span>
     </div>
   </a>
 </section>
@@ -451,19 +605,23 @@
   
   <div class="services-grid">
     <div class="service">
-      <h4>01. Brief</h4>
+      <div class="service-num">01</div>
+      <h4>Brief</h4>
       <p>You tell us what you need. We scope the work and assign the right agent team.</p>
     </div>
     <div class="service">
-      <h4>02. Research</h4>
+      <div class="service-num">02</div>
+      <h4>Research</h4>
       <p>Scout agents gather data, verify sources, and build the knowledge base.</p>
     </div>
     <div class="service">
-      <h4>03. Produce</h4>
+      <div class="service-num">03</div>
+      <h4>Produce</h4>
       <p>Specialized agents create, edit, and assemble deliverables simultaneously.</p>
     </div>
     <div class="service">
-      <h4>04. Deliver</h4>
+      <div class="service-num">04</div>
+      <h4>Deliver</h4>
       <p>QC agents review everything before handoff. Polished, ready-to-use output.</p>
     </div>
   </div>
